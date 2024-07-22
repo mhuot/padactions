@@ -1,13 +1,14 @@
 '''This module will listen for a MacroPad keys and perform actions'''
-import sys
+# import sys
+import hid
 import actions
 from actions.actions import lightson, lightsoff
 
-try:
-    import hid
-except ImportError:
-    print("Failed to import 'hid'. Ensure the 'hidapi' library is installed.")
-    sys.exit(1)
+# try:
+#     import hid
+# except ImportError:
+#     print("Failed to import 'hid'. Ensure the 'hidapi' library is installed.")
+#     sys.exit(1)
 
 # Define the vendor ID and product ID for the MacroPad
 VENDOR_ID = 0x239A  # Adafruit vendor ID (9114 in decimal)

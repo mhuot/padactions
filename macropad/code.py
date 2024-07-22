@@ -4,7 +4,7 @@ import sys
 try:
     from adafruit_macropad import MacroPad
 except ImportError:
-    print("Failed to import 'adafruit_macropad'.")
+    print("Failed to import 'adafruit_macropad'. Please install it.")
     sys.exit(1)
 
 macropad = MacroPad()
