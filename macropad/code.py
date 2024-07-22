@@ -1,4 +1,11 @@
-from adafruit_macropad import MacroPad
+'''This will generate keystrokes based on KEY_ACTIONS'''
+import sys
+
+try:
+    from adafruit_macropad import MacroPad
+except ImportError:
+    print("Failed to import 'adafruit_macropad'.")
+    sys.exit(1)
 
 macropad = MacroPad()
 

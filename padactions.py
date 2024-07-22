@@ -1,8 +1,13 @@
-import hid
-import signal
+'''This module will listen for a MacroPad keys and perform actions'''
 import sys
-import actions.myactions as actions
-from actions.myactions import lightson, lightsoff 
+import actions
+from actions.actions import lightson, lightsoff
+
+try:
+    import hid
+except ImportError:
+    print("Failed to import 'hid'. Ensure the 'hidapi' library is installed.")
+    sys.exit(1)
 
 # Define the vendor ID and product ID for the MacroPad
 VENDOR_ID = 0x239A  # Adafruit vendor ID (9114 in decimal)
@@ -10,22 +15,24 @@ PRODUCT_ID = 0x8108  # MacroPad RP2040 product ID (33032 in decimal)
 DEBUG = False
 DRYRUN = False
 
-actions.DEBUG = DEBUG
-actions.DRYRUN = DRYRUN
+actions.debug = DEBUG
+actions.dryrun = DRYRUN
 # Find the device
 def find_device(vendor_id, product_id):
+    '''This is used to find the devie based on the vendor and product IDs'''
     for device_info in hid.enumerate(vendor_id, product_id):
         if device_info['vendor_id'] == vendor_id and device_info['product_id'] == product_id:
             return device_info['path']
     return None
 
-def handle_key_press(data):
-    report_id = data[0]
+def handle_key_press(kpdata):
+    '''Used to handle the key presses received'''
+    report_id = kpdata[0]
     if DEBUG:
-        print(f"data {data[0]} {data[1]} {data[2]} {data[3]} ")
-        print(f"Received report: {data} with report id: {report_id}")
+        print(f"data {kpdata[0]} {kpdata[1]} {kpdata[2]} {kpdata[3]} ")
+        print(f"Received report: {kpdata} with report id: {report_id}")
     if report_id == 1:  # Report ID for consumer control usage
-        key_code = data[3]
+        key_code = kpdata[3]
         if DEBUG:
             print(f"Received consumer key code: {key_code}")
         if key_code == 30:
@@ -36,22 +43,12 @@ def handle_key_press(data):
             if DEBUG:
                 print(f"Got {key_code}")
 
-
-# Function to handle SIGINT (Ctrl+C)
-def signal_handler(signal, frame):
-    global RUNNING
-    RUNNING = False
-    print("Exiting...")    
-    device.close()
-    sys.exit(0)
-
 # Global variable to track program state
 RUNNING = True
 device_path = find_device(VENDOR_ID, PRODUCT_ID)
 
 if device_path is None:
     print(f"Failed to find device with VID={VENDOR_ID} and PID={PRODUCT_ID}")
-    exit(1)
 
 try:
     device = hid.Device(path=device_path)
@@ -59,13 +56,9 @@ try:
     print(f"Manufacturer: {device.manufacturer}")
     print(f"Product: {device.product}")
     print(f"Serial: {device.serial}")
-    print(f"MyVersion: 1.0")
-except Exception as e:
+    print("MyVersion: 1.0")
+except hid.HIDException as e:
     print(f"Failed to connect to the device: {e}")
-    exit(1)
-
-# Register the signal handler
-signal.signal(signal.SIGINT, signal_handler)
 
 if DEBUG:
     print("In DEBUG mode")
@@ -81,6 +74,8 @@ try:
             print("No data received")
 except hid.HIDException as e:
     print(f"Error reading from the device: {e}")
+except KeyboardInterrupt as e:
+    print(f"Normal exit {e}")
 finally:
     # Close the device when done
     device.close()

@@ -24,7 +24,7 @@ This project allows you to run actions in Python on a Raspberry Pi(like control 
    ```bash
    pip install -r requirements.txt
    ```
-   3. Configure udev rules:
+3. Configure udev rules:
    Create a new file /etc/udev/rules.d/99-macropad.rules:
    ```bash
    sudo nano /etc/udev/rules.d/99-macropad.rules
@@ -122,8 +122,11 @@ This will ensure your script runs as a systemd service and starts automatically 
 
 Set the DEBUG variable to True to enable debug output.
 
+## MacroPad code.py
+You will need to install the macropad/code.py onto your MacroPad.
+
 ## MacroPad libs needed
-This list is what I have on my MacroPad, it is possible I have more than needed. You should be able to put these in /lib on the MacroPad.
+This list is what I have on my MacroPad, it is possible I have more than needed. You should be able to put these in /lib on the MacroPad. See https://learn.adafruit.com/adafruit-macropad-rp2040/macropad-circuitpython-library for more information.
 * adafruit_bitmap_font
 * adafruit_debouncer
 * adafruit_displayio_layout
