@@ -1,10 +1,11 @@
 # MacroPad Light Control
 
-This project allows you to control Elgato lights using an Adafruit MacroPad RP2040. The MacroPad sends key codes via HID to a Python script that interprets these codes to turn the lights on or off.
+This project allows you to run actions in Python on a Raspberry Pi(like control Elgato lights) using an Adafruit MacroPad RP2040. The MacroPad sends key codes via HID to a Python script on the Raspberry Pi that interprets these codes to have Python perform actions (like turning the lights on or off).
 
 ## Prerequisites
 
 - Python 3.6+
+- CircuitPython 9.x
 - `hidapi` library
 - `requests` library
 
@@ -23,15 +24,10 @@ This project allows you to control Elgato lights using an Adafruit MacroPad RP20
    ```bash
    pip install -r requirements.txt
    ```
+   3. Configure udev rules:
+   Create a new file /etc/udev/rules.d/99-macropad.rules:
    ```bash
-   pip install wheel
-   pip install --use-pep517 hidapi
-   pip install requests
-   ```
-3. Configure udev rules:
-   Create a new file /etc/udev/rules.d/99-hid.rules:
-   ```bash
-   sudo nano /etc/udev/rules.d/99-hid.rules
+   sudo nano /etc/udev/rules.d/99-macropad.rules
    ```
 4. Validate the VendorID is 239a and ProductID is 8108
    ```bash
@@ -67,11 +63,11 @@ This project allows you to control Elgato lights using an Adafruit MacroPad RP20
 
 2. Run the script:
    ```bash
-   python macpad.py
+   python padactions.py
    ```
 
 ## Script Overview
-### macpad.py
+### padactions.py
 This script listens for key presses from the MacroPad and sends requests to turn Elgato lights on or off based on the key codes received.
 
 Key codes and actions:
@@ -83,12 +79,12 @@ Keycode 3: Turns the lights off
 
 1. Move your project to the /opt directory:
    ```bash
-   sudo mv /path/to/your/repository /opt/macpad
-   cd /opt/macpad
+   sudo mv /path/to/your/repository /opt/padactions
+   cd /opt/padactions
    ```
 2. Create a systemd service file
     ```bash
-    sudo nano /etc/systemd/system/macpad.service
+    sudo nano /etc/systemd/system/padactions.service
     ```
 3. Add the following content to the service file:
    ```bash
@@ -100,7 +96,7 @@ Keycode 3: Turns the lights off
    Type=simple
    User=YOUR_USERNAME
    WorkingDirectory=/path/to/your/repository
-   ExecStart=/opt/macpad/venv/bin/python /opt/macpad/macpad.py
+   ExecStart=/opt/padactions/venv/bin/python /opt/padactions/padactions.py
    Restart=on-failure
    Environment="PYTHONUNBUFFERED=1"
 
@@ -114,11 +110,11 @@ Keycode 3: Turns the lights off
    ```
 5. Enable the service to start on boot:
    ```bash
-   sudo systemctl enable macpad.service
+   sudo systemctl enable padactions.service
    ```
 6. Start the service
    ```bash
-   sudo systemctl start macpad
+   sudo systemctl start padactions
    ```
 This will ensure your script runs as a systemd service and starts automatically on boot.
 
@@ -126,7 +122,24 @@ This will ensure your script runs as a systemd service and starts automatically 
 
 Set the DEBUG variable to True to enable debug output.
 
+## MacroPad libs needed
+This list is what I have on my MacroPad, it is possible I have more than needed. You should be able to put these in /lib on the MacroPad.
+* adafruit_bitmap_font
+* adafruit_debouncer
+* adafruit_displayio_layout
+* adafruit_display_shapes
+* adafruit_display_text
+* adafruit_hid
+* adafruit_led_animation
+* adafruit_macropad
+* adafruit_midi
+* adafruit_pixelbuf
+* adafruit_simple_text_display
+* adafruit_ticks
+* neopixel
+
 ## TODO:
+Add the MacroPad info to the README
 Allow DEBUG, vendor ID and product ID to be specified by environment variables
 Have the host send feedback on actions to set key and display
 Add the encoder for making changes
