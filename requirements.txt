@@ -1,0 +1,11 @@
+certifi==2024.7.4
+charset-normalizer==3.3.2
+evdev==1.7.1
+hid==1.0.6
+hidapi==0.14.0
+idna==3.7
+pynput==1.7.7
+python-xlib==0.33
+requests==2.32.3
+six==1.16.0
+urllib3==2.2.2
