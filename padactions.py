@@ -11,8 +11,8 @@ actions_module_name = os.getenv('ACTIONS_MODULE', 'actions.actions')
 try:
     actions = importlib.import_module(actions_module_name)
 except ImportError:
-    print(f"Error: Failed to import '{actions_module_name}'. 
-          Ensure it is in the Python path and install required packages.")
+    print(f"Error: Failed to import '{actions_module_name}'. " +
+          "Ensure it is in the Python path and install required packages.")
     sys.exit(1)
 
 # Define the vendor ID and product ID for the MacroPad
