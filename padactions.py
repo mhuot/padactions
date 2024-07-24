@@ -11,9 +11,10 @@ actions_module_name = os.getenv('ACTIONS_MODULE', 'actions.actions')
 try:
     actions = importlib.import_module(actions_module_name)
 except ImportError:
-    print(f"Error: Failed to import '{actions_module_name}'. Ensure it is in the Python path and install required packages.")
+    print(f"Error: Failed to import '{actions_module_name}'. 
+          Ensure it is in the Python path and install required packages.")
     sys.exit(1)
-    
+
 # Define the vendor ID and product ID for the MacroPad
 VENDOR_ID = 0x239A  # Adafruit vendor ID (9114 in decimal)
 PRODUCT_ID = 0x8108  # MacroPad RP2040 product ID (33032 in decimal)
@@ -69,12 +70,11 @@ if DEBUG:
 # Read input from the MacroPad
 print("Listening for key presses...(Press Ctrl+C to exit)")
 try:
-    while RUNNING:
-        data = device.read(64)  # Adjust the buffer size based on your MacroPad's report size
-        if data:
-            handle_key_press(data)
-        else:
-            print("No data received")
+    data = device.read(64)  # Adjust the buffer size based on your MacroPad's report size
+    if data:
+        handle_key_press(data)
+    else:
+        print("No data received")
 except hid.HIDException as e:
     print(f"Error reading from the device: {e}")
 except KeyboardInterrupt as e:
