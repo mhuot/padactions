@@ -13,8 +13,8 @@ This project allows you to run actions in Python on a Raspberry Pi(like control 
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository_url>
-   cd <repository_directory>
+   git clone https://github.com/mhuot/padactions.git
+   cd padactions
     ```
    ```bash
    python3 -m venv venv
@@ -56,12 +56,16 @@ This project allows you to run actions in Python on a Raspberry Pi(like control 
 8. Log out and log back in for the group change to take effect.
 
 ## Running the Script
-1. Activate the virtual environment:
+1. Change to the directory of the repository
+   ```bash
+   cd /path/to/your/repository
+   ```
+2. Activate the virtual environment:
    ```bash
    source venv/bin/activate
    ```
 
-2. Run the script:
+3. Run the script:
    ```bash
    python padactions.py
    ```
@@ -72,8 +76,9 @@ This script listens for key presses from the MacroPad and sends requests to turn
 
 Key codes and actions:
 
-Keycode 1: Turns the lights on
-Keycode 3: Turns the lights off
+Keycode 30: Turns the lights on
+Keycode 31
+: Turns the lights off
 
 ## Creating a systemd Service
 
