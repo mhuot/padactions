@@ -1,15 +1,19 @@
 '''This module will listen for a MacroPad keys and perform actions'''
-# import sys
+import sys
+import os
+import importlib
 import hid
 import actions
 from actions.actions import lightson, lightsoff
 
-# try:
-#     import hid
-# except ImportError:
-#     print("Failed to import 'hid'. Ensure the 'hidapi' library is installed.")
-#     sys.exit(1)
-
+# Import the actions module specified by the environment variable or default to 'actions.actions'
+actions_module_name = os.getenv('ACTIONS_MODULE', 'actions.actions')
+try:
+    actions = importlib.import_module(actions_module_name)
+except ImportError:
+    print(f"Error: Failed to import '{actions_module_name}'. Ensure it is in the Python path and install required packages.")
+    sys.exit(1)
+    
 # Define the vendor ID and product ID for the MacroPad
 VENDOR_ID = 0x239A  # Adafruit vendor ID (9114 in decimal)
 PRODUCT_ID = 0x8108  # MacroPad RP2040 product ID (33032 in decimal)
@@ -44,8 +48,6 @@ def handle_key_press(kpdata):
             if DEBUG:
                 print(f"Got {key_code}")
 
-# Global variable to track program state
-RUNNING = True
 device_path = find_device(VENDOR_ID, PRODUCT_ID)
 
 if device_path is None:
